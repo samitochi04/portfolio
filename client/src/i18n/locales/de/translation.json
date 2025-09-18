@@ -1,0 +1,17 @@
+{
+  "nav": {
+    "home": "Startseite",
+    "about": "Über mich",
+    "projects": "Projekte",
+    "contact": "Kontakt"
+  },
+  "hero": {
+    "title": "Willkommen in meinem Portfolio",
+    "subtitle": "Full Stack Entwickler",
+    "cta": "Meine Arbeit ansehen"
+  },
+  "common": {
+    "loading": "Wird geladen...",
+    "error": "Etwas ist schief gelaufen"
+  }
+}
