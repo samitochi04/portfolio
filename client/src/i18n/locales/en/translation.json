@@ -1,17 +1,100 @@
 {
   "nav": {
     "home": "Home",
-    "about": "About",
+    "skills": "Skills",
+    "experiences": "Experiences",
     "projects": "Projects",
     "contact": "Contact"
   },
   "hero": {
     "title": "Welcome to my portfolio",
-    "subtitle": "Full Stack Developer",
-    "cta": "View my work"
+    "subtitle": "Data Scientist & Full Stack Developer",
+    "description": "Passionate about Artificial Intelligence, data analysis, and modern web development. I transform data into insights and ideas into innovative applications.",
+    "playVoice": "Play welcome message",
+    "stopVoice": "Stop message",
+    "stats": {
+      "experience": "Years of experience",
+      "projects": "Completed projects",
+      "skills": "Technologies mastered",
+      "availability": "Availability"
+    },
+    "cta": {
+      "viewWork": "View my work",
+      "contact": "Contact me"
+    }
+  },
+  "skills": {
+    "title": "My Skills",
+    "subtitle": "Technologies and tools I master",
+    "categories": {
+      "programming": "Programming",
+      "frameworks": "Frameworks",
+      "databases": "Databases",
+      "tools": "Tools",
+      "ai_ml": "AI & Machine Learning",
+      "soft_skills": "Soft Skills"
+    },
+    "level": "Level",
+    "years": "years"
+  },
+  "experience": {
+    "title": "My Journey",
+    "subtitle": "Professional experience and education",
+    "current": "Current",
+    "duration": "Duration",
+    "company": "Company",
+    "education": "Education",
+    "work": "Experience",
+    "project": "Project",
+    "certification": "Certification"
+  },
+  "projects": {
+    "title": "My Projects",
+    "subtitle": "Discover my recent work",
+    "viewLive": "View project",
+    "viewCode": "View code",
+    "technologies": "Technologies used",
+    "type": {
+      "web_app": "Web Application",
+      "mobile_app": "Mobile Application",
+      "ai_ml": "Artificial Intelligence",
+      "data_science": "Data Science",
+      "api": "API",
+      "other": "Other"
+    }
+  },
+  "contact": {
+    "title": "Contact Me",
+    "subtitle": "Let's discuss your next project",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "message": "Message",
+    "send": "Send",
+    "sending": "Sending...",
+    "success": "Message sent successfully!",
+    "error": "Error sending message"
+  },
+  "chatbot": {
+    "title": "AI Assistant",
+    "placeholder": "Ask me a question...",
+    "send": "Send",
+    "thinking": "Thinking...",
+    "error": "Sorry, an error occurred",
+    "welcome": "Hello! I'm Samuel's AI assistant. How can I help you?"
   },
   "common": {
     "loading": "Loading...",
-    "error": "Something went wrong"
+    "error": "Something went wrong",
+    "close": "Close",
+    "open": "Open",
+    "save": "Save",
+    "cancel": "Cancel",
+    "edit": "Edit",
+    "delete": "Delete",
+    "add": "Add",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous"
   }
 }

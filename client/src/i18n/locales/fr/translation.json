@@ -1,17 +1,100 @@
 {
   "nav": {
     "home": "Accueil",
-    "about": "À propos",
+    "skills": "Compétences",
+    "experiences": "Expériences",
     "projects": "Projets",
     "contact": "Contact"
   },
   "hero": {
     "title": "Bienvenue dans mon portfolio",
-    "subtitle": "Développeur Full Stack",
-    "cta": "Voir mes réalisations"
+    "subtitle": "Data Scientist & Développeur Full Stack",
+    "description": "Passionné par l'Intelligence Artificielle, l'analyse de données et le développement web moderne. Je transforme les données en insights et les idées en applications innovantes.",
+    "playVoice": "Jouer le message de bienvenue",
+    "stopVoice": "Arrêter le message",
+    "stats": {
+      "experience": "Années d'expérience",
+      "projects": "Projets réalisés",
+      "skills": "Technologies maîtrisées",
+      "availability": "Disponibilité"
+    },
+    "cta": {
+      "viewWork": "Voir mes réalisations",
+      "contact": "Me contacter"
+    }
+  },
+  "skills": {
+    "title": "Mes Compétences",
+    "subtitle": "Technologies et outils que je maîtrise",
+    "categories": {
+      "programming": "Programmation",
+      "frameworks": "Frameworks",
+      "databases": "Bases de données",
+      "tools": "Outils",
+      "ai_ml": "IA & Machine Learning",
+      "soft_skills": "Compétences transversales"
+    },
+    "level": "Niveau",
+    "years": "années"
+  },
+  "experience": {
+    "title": "Mon Parcours",
+    "subtitle": "Expériences professionnelles et formations",
+    "current": "Actuel",
+    "duration": "Durée",
+    "company": "Entreprise",
+    "education": "Formation",
+    "work": "Expérience",
+    "project": "Projet",
+    "certification": "Certification"
+  },
+  "projects": {
+    "title": "Mes Projets",
+    "subtitle": "Découvrez mes réalisations récentes",
+    "viewLive": "Voir le projet",
+    "viewCode": "Voir le code",
+    "technologies": "Technologies utilisées",
+    "type": {
+      "web_app": "Application Web",
+      "mobile_app": "Application Mobile",
+      "ai_ml": "Intelligence Artificielle",
+      "data_science": "Data Science",
+      "api": "API",
+      "other": "Autre"
+    }
+  },
+  "contact": {
+    "title": "Contactez-moi",
+    "subtitle": "Discutons de votre prochain projet",
+    "name": "Nom",
+    "email": "Email",
+    "subject": "Sujet",
+    "message": "Message",
+    "send": "Envoyer",
+    "sending": "Envoi...",
+    "success": "Message envoyé avec succès !",
+    "error": "Erreur lors de l'envoi du message"
+  },
+  "chatbot": {
+    "title": "Assistant IA",
+    "placeholder": "Posez-moi une question...",
+    "send": "Envoyer",
+    "thinking": "Je réfléchis...",
+    "error": "Désolé, une erreur s'est produite",
+    "welcome": "Bonjour ! Je suis l'assistant IA de Samuel. Comment puis-je vous aider ?"
   },
   "common": {
     "loading": "Chargement...",
-    "error": "Une erreur s'est produite"
+    "error": "Une erreur s'est produite",
+    "close": "Fermer",
+    "open": "Ouvrir",
+    "save": "Sauvegarder",
+    "cancel": "Annuler",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "add": "Ajouter",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent"
   }
 }

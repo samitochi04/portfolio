@@ -1,6 +1,6 @@
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import LanguageDectector from 'i18next-browser-languagedectactor';
+import LanguageDetector from 'i18next-browser-languagedetector';
 
 import enTranslation from './locales/en/translation.json';
 import frTranslation from './locales/fr/translation.json';
@@ -19,7 +19,7 @@ const resources = {
 }
 
 i18n
-    .use(LanguageDectector)
+    .use(LanguageDetector)
     .use(initReactI18next)
     .init({
         resources,

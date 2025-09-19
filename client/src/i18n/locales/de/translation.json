@@ -1,17 +1,100 @@
 {
   "nav": {
     "home": "Startseite",
-    "about": "Über mich",
+    "skills": "Fähigkeiten",
+    "experiences": "Erfahrungen",
     "projects": "Projekte",
     "contact": "Kontakt"
   },
   "hero": {
     "title": "Willkommen in meinem Portfolio",
-    "subtitle": "Full Stack Entwickler",
-    "cta": "Meine Arbeit ansehen"
+    "subtitle": "Data Scientist & Full Stack Entwickler",
+    "description": "Leidenschaftlich für Künstliche Intelligenz, Datenanalyse und moderne Webentwicklung. Ich verwandle Daten in Erkenntnisse und Ideen in innovative Anwendungen.",
+    "playVoice": "Begrüßungsnachricht abspielen",
+    "stopVoice": "Nachricht stoppen",
+    "stats": {
+      "experience": "Jahre Erfahrung",
+      "projects": "Abgeschlossene Projekte",
+      "skills": "Beherrschte Technologien",
+      "availability": "Verfügbarkeit"
+    },
+    "cta": {
+      "viewWork": "Meine Arbeit ansehen",
+      "contact": "Kontakt aufnehmen"
+    }
+  },
+  "skills": {
+    "title": "Meine Fähigkeiten",
+    "subtitle": "Technologien und Tools, die ich beherrsche",
+    "categories": {
+      "programming": "Programmierung",
+      "frameworks": "Frameworks",
+      "databases": "Datenbanken",
+      "tools": "Werkzeuge",
+      "ai_ml": "KI & Maschinelles Lernen",
+      "soft_skills": "Soft Skills"
+    },
+    "level": "Niveau",
+    "years": "Jahre"
+  },
+  "experience": {
+    "title": "Mein Werdegang",
+    "subtitle": "Berufserfahrung und Ausbildung",
+    "current": "Aktuell",
+    "duration": "Dauer",
+    "company": "Unternehmen",
+    "education": "Ausbildung",
+    "work": "Erfahrung",
+    "project": "Projekt",
+    "certification": "Zertifizierung"
+  },
+  "projects": {
+    "title": "Meine Projekte",
+    "subtitle": "Entdecken Sie meine neuesten Arbeiten",
+    "viewLive": "Projekt ansehen",
+    "viewCode": "Code ansehen",
+    "technologies": "Verwendete Technologien",
+    "type": {
+      "web_app": "Webanwendung",
+      "mobile_app": "Mobile Anwendung",
+      "ai_ml": "Künstliche Intelligenz",
+      "data_science": "Data Science",
+      "api": "API",
+      "other": "Andere"
+    }
+  },
+  "contact": {
+    "title": "Kontaktieren Sie mich",
+    "subtitle": "Lassen Sie uns über Ihr nächstes Projekt sprechen",
+    "name": "Name",
+    "email": "E-Mail",
+    "subject": "Betreff",
+    "message": "Nachricht",
+    "send": "Senden",
+    "sending": "Wird gesendet...",
+    "success": "Nachricht erfolgreich gesendet!",
+    "error": "Fehler beim Senden der Nachricht"
+  },
+  "chatbot": {
+    "title": "KI-Assistent",
+    "placeholder": "Stellen Sie mir eine Frage...",
+    "send": "Senden",
+    "thinking": "Ich denke nach...",
+    "error": "Entschuldigung, ein Fehler ist aufgetreten",
+    "welcome": "Hallo! Ich bin Samuels KI-Assistent. Wie kann ich Ihnen helfen?"
   },
   "common": {
     "loading": "Wird geladen...",
-    "error": "Etwas ist schief gelaufen"
+    "error": "Etwas ist schief gelaufen",
+    "close": "Schließen",
+    "open": "Öffnen",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "add": "Hinzufügen",
+    "back": "Zurück",
+    "next": "Weiter",
+    "previous": "Vorherige"
   }
 }
