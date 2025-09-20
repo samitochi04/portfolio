@@ -3,7 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import nodemailer from 'nodemailer';
 import { createClient } from '@supabase/supabase-js';
-import { generateChatbotResponse, getConversationSuggestions } from './services/chatbot.js';
+import { generateChatbotResponse, getConversationSuggestions, loadKnowledgeBase, refreshKnowledgeBase } from './services/chatbot.js';
 
 // Load environment variables
 dotenv.config();
@@ -249,6 +249,26 @@ app.get('/api/chatbot/suggestions', (req, res) => {
   }
 });
 
+// Refresh chatbot knowledge base cache
+app.post('/api/chatbot/refresh-cache', async (req, res) => {
+  try {
+    console.log('🔄 Cache refresh requested via API');
+    await refreshKnowledgeBase();
+    
+    res.json({
+      success: true,
+      message: 'Cache du chatbot rafraîchi avec succès',
+      timestamp: new Date().toISOString()
+    });
+  } catch (error) {
+    console.error('Error refreshing cache:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Erreur lors du rafraîchissement du cache'
+    });
+  }
+});
+
 // Chat with the bot
 app.post('/api/chatbot/chat', async (req, res) => {
   try {
@@ -365,10 +385,17 @@ app.use((req, res) => {
   });
 });
 
-// Start server
-app.listen(PORT, () => {
+// Start server and load knowledge base
+app.listen(PORT, async () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📧 Email service configured with: ${process.env.EMAIL_USER || 'Not configured'}`);
+  
+  // Load chatbot knowledge base at startup
+  try {
+    await loadKnowledgeBase();
+  } catch (error) {
+    console.error('❌ Failed to load knowledge base at startup:', error);
+  }
 });
 
 export default app;

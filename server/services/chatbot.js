@@ -27,9 +27,21 @@ const STATIC_PERSONAL_INFO = {
   github: "https://github.com/samitochi04"
 };
 
-// Function to fetch real-time data from database
-async function fetchKnowledgeBase() {
+// Cached knowledge base - loaded once at startup
+let cachedKnowledgeBase = null;
+let lastCacheUpdate = null;
+
+// Function to refresh cache (can be called via API endpoint)
+export async function refreshKnowledgeBase() {
+  console.log('🔄 Refreshing knowledge base cache...');
+  return await loadKnowledgeBase();
+}
+
+// Export function to load knowledge base at startup
+export async function loadKnowledgeBase() {
   try {
+    console.log('🔄 Loading knowledge base from database...');
+    
     // Fetch all data in parallel
     const [skillsResult, experiencesResult, projectsResult, certificationsResult] = await Promise.all([
       supabase
@@ -100,7 +112,7 @@ async function fetchKnowledgeBase() {
       description: cert.description
     })) || [];
 
-    return {
+    const knowledgeBase = {
       personalInfo: STATIC_PERSONAL_INFO,
       skills,
       experiences,
@@ -116,10 +128,19 @@ async function fetchKnowledgeBase() {
       ]
     };
 
+    // Cache the data
+    cachedKnowledgeBase = knowledgeBase;
+    lastCacheUpdate = new Date().toISOString();
+    
+    console.log(`✅ Knowledge base loaded successfully! Skills: ${Object.keys(skills).length} categories, Projects: ${projects.length}, Experiences: ${experiences.length}, Certifications: ${certifications.length}`);
+    
+    return knowledgeBase;
+
   } catch (error) {
-    console.error('Error fetching knowledge base:', error);
+    console.error('❌ Error loading knowledge base:', error);
+    
     // Return fallback static data if database fetch fails
-    return {
+    const fallbackData = {
       personalInfo: STATIC_PERSONAL_INFO,
       skills: { error: "Impossible de récupérer les compétences" },
       experiences: [],
@@ -127,7 +148,28 @@ async function fetchKnowledgeBase() {
       certifications: [],
       interests: ["Intelligence Artificielle", "Data Science", "Développement Web"]
     };
+    
+    cachedKnowledgeBase = fallbackData;
+    lastCacheUpdate = new Date().toISOString();
+    
+    return fallbackData;
   }
+}
+
+// Function to get cached knowledge base
+export function getKnowledgeBase() {
+  if (!cachedKnowledgeBase) {
+    console.warn('⚠️ Knowledge base not loaded! Using fallback data.');
+    return {
+      personalInfo: STATIC_PERSONAL_INFO,
+      skills: { error: "Données non chargées" },
+      experiences: [],
+      projects: [],
+      certifications: [],
+      interests: ["Intelligence Artificielle", "Data Science", "Développement Web"]
+    };
+  }
+  return cachedKnowledgeBase;
 }
 
 // Helper function to format date periods
@@ -142,80 +184,106 @@ function formatDatePeriod(startDate, endDate, isCurrent) {
   return start.toString();
 }
 
-// System prompt for the chatbot
-const SYSTEM_PROMPT = `
-Tu es l'assistant virtuel de Samuel FOTSO, un Data Scientist passionné par l'IA et les données.
+// Optimized system prompt for faster responses
+const SYSTEM_PROMPT = `Tu es l'assistant de Samuel FOTSO, Data Scientist. Réponds en français, de manière concise et professionnelle.
 
-PERSONNALITÉ:
-- Professionnel mais accessible
-- Enthousiaste à propos de la technologie
-- Capable d'expliquer des concepts techniques de manière simple
-- Multilingue (français, anglais, allemand)
+INSTRUCTIONS:
+- Réponses courtes et précises (max 150 mots)
+- Utilise les données fournies
+- Si info manquante: suggère le contact direct
+- Reste professionnel et enthousiaste
+- Adapte la réponse à la question posée`;
 
-RÔLE:
-- Présenter Samuel et ses compétences
-- Répondre aux questions sur son parcours, projets, et expériences
-- Aider les visiteurs à comprendre son expertise
-- Encourager le contact pour des collaborations
+// Function to create optimized prompt for faster processing
+function createOptimizedPrompt(userMessage, knowledgeBase) {
+  // Create a condensed version of knowledge base for faster processing
+  const condensedKnowledge = {
+    contact: `${knowledgeBase.personalInfo.name} - ${knowledgeBase.personalInfo.title}
+Email: ${knowledgeBase.personalInfo.email}
+LinkedIn: ${knowledgeBase.personalInfo.linkedin}`,
+    
+    skills: Object.entries(knowledgeBase.skills).map(([category, skills]) => 
+      `${category}: ${skills.map(s => `${s.name} (${s.level}%)`).join(', ')}`
+    ).join('\n'),
+    
+    experiences: knowledgeBase.experiences.slice(0, 3).map(exp => 
+      `${exp.title} chez ${exp.company} (${exp.period})`
+    ).join(', '),
+    
+    projects: knowledgeBase.projects.slice(0, 3).map(proj => 
+      `${proj.title} - ${proj.type}`
+    ).join(', '),
+    
+    certifications: knowledgeBase.certifications.slice(0, 3).map(cert => 
+      `${cert.name} (${cert.year})`
+    ).join(', ')
+  };
 
-STYLE DE COMMUNICATION:
-- Réponses concises mais informatives
-- Utilise des émojis de manière appropriée
-- Adapte le niveau technique selon l'interlocuteur
-- Toujours positif et professionnel
+  return `PROFIL: ${condensedKnowledge.contact}
 
-RÈGLES IMPORTANTES:
-- Reste dans le contexte de Samuel FOTSO uniquement
-- Ne réponds qu'aux questions liées à son profil professionnel
-- Si tu ne connais pas une information spécifique, dirige vers le contact direct
-- Utilise les données fournies dans la base de connaissances
-- Réponds dans la langue de la question posée
-`;
+COMPÉTENCES:
+${condensedKnowledge.skills}
 
-// Function to create a conversation context with dynamic data
+EXPÉRIENCES: ${condensedKnowledge.experiences}
+
+PROJETS: ${condensedKnowledge.projects}
+
+CERTIFICATIONS: ${condensedKnowledge.certifications}
+
+QUESTION: ${userMessage}`;
+}
+
+// Function to create a conversation context with cached data
 export async function createConversationContext(userMessage, conversationHistory = []) {
-  const knowledgeBase = await fetchKnowledgeBase();
+  const knowledgeBase = getKnowledgeBase(); // Use cached data
   
   const context = {
     knowledge: knowledgeBase,
     conversation: conversationHistory,
     currentMessage: userMessage,
-    timestamp: new Date().toISOString()
+    timestamp: new Date().toISOString(),
+    cacheInfo: {
+      lastUpdate: lastCacheUpdate,
+      isCached: !!cachedKnowledgeBase
+    }
   };
   
   return context;
 }
 
-// Function to generate chatbot response with dynamic data
+// Optimized function to generate chatbot response with cached data
 export async function generateChatbotResponse(userMessage, conversationHistory = []) {
   try {
-    // Fetch fresh data from database
-    const knowledgeBase = await fetchKnowledgeBase();
+    // Use cached data instead of fetching from database
+    const knowledgeBase = getKnowledgeBase();
     
-    // Prepare messages for OpenAI
+    // Create optimized prompt for faster processing
+    const optimizedPrompt = createOptimizedPrompt(userMessage, knowledgeBase);
+    
+    // Build minimal message array for faster processing
     const messages = [
       { role: "system", content: SYSTEM_PROMPT },
-      { role: "system", content: `Base de connaissances (données en temps réel): ${JSON.stringify(knowledgeBase, null, 2)}` }
+      { role: "user", content: optimizedPrompt }
     ];
     
-    // Add conversation history
-    conversationHistory.forEach(msg => {
-      messages.push({ role: msg.role, content: msg.content });
-    });
-    
-    // Add current user message
-    messages.push({ role: "user", content: userMessage });
+    // Add only the last 2 conversation messages to maintain context but reduce tokens
+    if (conversationHistory.length > 0) {
+      const recentHistory = conversationHistory.slice(-2);
+      recentHistory.forEach(msg => {
+        messages.splice(-1, 0, { role: msg.role, content: msg.content });
+      });
+    }
     
     const startTime = Date.now();
     
-    // Generate response using OpenAI
+    // Optimized OpenAI call for faster response
     const completion = await openai.chat.completions.create({
       model: "gpt-3.5-turbo",
       messages: messages,
-      max_tokens: 500,
-      temperature: 0.7,
-      presence_penalty: 0.1,
-      frequency_penalty: 0.1
+      max_tokens: 300, // Reduced for faster response
+      temperature: 0.5, // Lower for more consistent responses
+      presence_penalty: 0,
+      frequency_penalty: 0
     });
     
     const responseTime = Date.now() - startTime;
@@ -226,10 +294,14 @@ export async function generateChatbotResponse(userMessage, conversationHistory =
       response: response,
       responseTime: responseTime,
       context: {
-        knowledge: knowledgeBase,
-        conversation: conversationHistory,
+        knowledge: { summary: "Cached data used" },
+        conversation: conversationHistory.slice(-2), // Only include recent history
         currentMessage: userMessage,
-        timestamp: new Date().toISOString()
+        timestamp: new Date().toISOString(),
+        cacheInfo: {
+          lastUpdate: lastCacheUpdate,
+          dataSource: "cache"
+        }
       },
       usage: completion.usage
     };
@@ -283,5 +355,7 @@ export default {
   generateChatbotResponse,
   createConversationContext,
   getConversationSuggestions,
-  fetchKnowledgeBase
+  loadKnowledgeBase,
+  refreshKnowledgeBase,
+  getKnowledgeBase
 };
