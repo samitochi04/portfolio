@@ -8,8 +8,8 @@
   },
   "hero": {
     "title": "Willkommen in meinem Portfolio",
-    "subtitle": "Data Scientist & Full Stack Entwickler",
-    "description": "Leidenschaftlich für Künstliche Intelligenz, Datenanalyse und moderne Webentwicklung. Ich verwandle Daten in Erkenntnisse und Ideen in innovative Anwendungen.",
+    "subtitle": "Data Scientist",
+    "description": "Leidenschaftlich für Künstliche Intelligenz, Datenanalyse und Automatisierung. Ich verwandle Daten in Erkenntnisse und Ideen in innovative Anwendungen.",
     "playVoice": "Begrüßungsnachricht abspielen",
     "stopVoice": "Nachricht stoppen",
     "stats": {
@@ -41,18 +41,21 @@
     "title": "Mein Werdegang",
     "subtitle": "Berufserfahrung und Ausbildung",
     "current": "Aktuell",
+    "noExpiration": "Keine Ablaufzeit",
     "duration": "Dauer",
     "company": "Unternehmen",
     "education": "Ausbildung",
     "work": "Erfahrung",
     "project": "Projekt",
-    "certification": "Zertifizierung"
+    "certification": "Zertifizierung",
+    "viewDetails": "Details anzeigen"
   },
   "projects": {
     "title": "Meine Projekte",
     "subtitle": "Entdecken Sie meine neuesten Arbeiten",
     "viewLive": "Projekt ansehen",
     "viewCode": "Code ansehen",
+    "viewDetails": "Details anzeigen",
     "technologies": "Verwendete Technologien",
     "type": {
       "web_app": "Webanwendung",
@@ -77,11 +80,15 @@
   },
   "chatbot": {
     "title": "KI-Assistent",
+    "subtitle": "Stellen Sie mir Fragen über Samuel",
     "placeholder": "Stellen Sie mir eine Frage...",
     "send": "Senden",
     "thinking": "Ich denke nach...",
     "error": "Entschuldigung, ein Fehler ist aufgetreten",
-    "welcome": "Hallo! Ich bin Samuels KI-Assistent. Wie kann ich Ihnen helfen?"
+    "welcome": "Hallo! Ich bin Samuels KI-Assistent. Wie kann ich Ihnen helfen?",
+    "suggestions": "Vorschläge",
+    "close": "Chat schließen",
+    "open": "Chat öffnen"
   },
   "common": {
     "loading": "Wird geladen...",

@@ -48,6 +48,36 @@ const Skills = () => {
     return skills.filter(skill => skill.category === category);
   };
 
+  // Convert level to star rating
+  const getStarRating = (level) => {
+    if (level <= 20) return 1;
+    if (level <= 40) return 2;
+    if (level <= 60) return 3;
+    if (level <= 80) return 4;
+    return 5;
+  };
+
+  // Render stars based on rating
+  const renderStars = (rating, level) => {
+    return (
+      <div className="flex items-center space-x-1">
+        {[1, 2, 3, 4, 5].map((star) => (
+          <svg
+            key={star}
+            className={`w-5 h-5 ${
+              star <= rating
+                ? 'text-yellow-400 fill-current'
+                : 'text-gray-300 fill-current'
+            }`}
+            viewBox="0 0 24 24"
+          >
+            <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z" />
+          </svg>
+        ))}
+      </div>
+    );
+  };
+
   if (loading) {
     return (
       <section id="skills" className="relative py-20 bg-gradient-to-b from-gray-50 to-white">
@@ -127,23 +157,27 @@ const Skills = () => {
                 </Card.Header>
                 <Card.Body>
                   <div className="space-y-4">
-                    {categorySkills.map((skill) => (
-                      <div key={skill.id} className="space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="font-medium text-gray-800">{skill.name}</span>
-                          <span className="text-sm text-gray-600">{skill.level}%</span>
+                    {categorySkills.map((skill) => {
+                      const starRating = getStarRating(skill.level);
+                      return (
+                        <div key={skill.id} className="space-y-2">
+                          <div className="flex justify-between items-start">
+                            <span className="font-medium text-gray-800">{skill.name}</span>
+                          </div>
+                          <div className="flex justify-between items-center">
+                            {renderStars(starRating, skill.level)}
+                            {skill.years_experience > 0 && (
+                              <span className="text-xs text-gray-500">
+                                {skill.years_experience} {skill.years_experience === 1 ? 'year' : 'years'}
+                              </span>
+                            )}
+                          </div>
+                          {skill.description && (
+                            <p className="text-sm text-gray-600 mt-1">{skill.description}</p>
+                          )}
                         </div>
-                        <div className="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
-                          <div 
-                            className="h-full bg-gradient-to-r from-blue-500 to-purple-600 rounded-full transition-all duration-1000 ease-out"
-                            style={{ 
-                              width: `${skill.level}%`,
-                              transform: selectedCategory === category || selectedCategory === null ? 'translateX(0)' : 'translateX(-100%)'
-                            }}
-                          />
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </Card.Body>
               </Card>

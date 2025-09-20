@@ -70,7 +70,27 @@ CREATE TABLE IF NOT EXISTS public.projects (
 );
 
 -- =============================================
--- 4. ADMIN USERS TABLE
+-- 4. CERTIFICATIONS TABLE
+-- =============================================
+CREATE TABLE IF NOT EXISTS public.certifications (
+    id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
+    name VARCHAR(200) NOT NULL,
+    issuing_organization VARCHAR(200) NOT NULL,
+    issue_date DATE NOT NULL,
+    expiration_date DATE,
+    credential_id VARCHAR(100),
+    credential_url TEXT,
+    certificate_url TEXT,
+    description TEXT,
+    skills TEXT[],
+    is_featured BOOLEAN DEFAULT false,
+    display_order INTEGER DEFAULT 0,
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- =============================================
+-- 5. ADMIN USERS TABLE
 -- =============================================
 CREATE TABLE IF NOT EXISTS public.admin_users (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -85,7 +105,7 @@ CREATE TABLE IF NOT EXISTS public.admin_users (
 );
 
 -- =============================================
--- 5. USER TRACKING TABLE
+-- 6. USER TRACKING TABLE
 -- =============================================
 CREATE TABLE IF NOT EXISTS public.user_tracking (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -102,7 +122,7 @@ CREATE TABLE IF NOT EXISTS public.user_tracking (
 );
 
 -- =============================================
--- 6. CHATBOT CONVERSATIONS TABLE
+-- 7. CHATBOT CONVERSATIONS TABLE
 -- =============================================
 CREATE TABLE IF NOT EXISTS public.chatbot_conversations (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -116,7 +136,7 @@ CREATE TABLE IF NOT EXISTS public.chatbot_conversations (
 );
 
 -- =============================================
--- 7. SITE SETTINGS TABLE
+-- 8. SITE SETTINGS TABLE
 -- =============================================
 CREATE TABLE IF NOT EXISTS public.site_settings (
     id UUID DEFAULT gen_random_uuid() PRIMARY KEY,
@@ -139,6 +159,9 @@ CREATE INDEX IF NOT EXISTS idx_experiences_current ON public.experiences(is_curr
 CREATE INDEX IF NOT EXISTS idx_projects_type ON public.projects(type);
 CREATE INDEX IF NOT EXISTS idx_projects_featured ON public.projects(is_featured);
 CREATE INDEX IF NOT EXISTS idx_projects_status ON public.projects(status);
+CREATE INDEX IF NOT EXISTS idx_certifications_organization ON public.certifications(issuing_organization);
+CREATE INDEX IF NOT EXISTS idx_certifications_featured ON public.certifications(is_featured);
+CREATE INDEX IF NOT EXISTS idx_certifications_issue_date ON public.certifications(issue_date);
 CREATE INDEX IF NOT EXISTS idx_admin_users_email ON public.admin_users(email);
 CREATE INDEX IF NOT EXISTS idx_admin_users_active ON public.admin_users(is_active);
 CREATE INDEX IF NOT EXISTS idx_user_tracking_timestamp ON public.user_tracking(timestamp);
@@ -158,10 +181,18 @@ BEGIN
 END;
 $$ language 'plpgsql';
 
--- Apply triggers to tables with updated_at columns
+-- Apply triggers to tables with updated_at columns (drop existing first to avoid conflicts)
+DROP TRIGGER IF EXISTS update_skills_updated_at ON public.skills;
+DROP TRIGGER IF EXISTS update_experiences_updated_at ON public.experiences;
+DROP TRIGGER IF EXISTS update_projects_updated_at ON public.projects;
+DROP TRIGGER IF EXISTS update_certifications_updated_at ON public.certifications;
+DROP TRIGGER IF EXISTS update_admin_users_updated_at ON public.admin_users;
+DROP TRIGGER IF EXISTS update_site_settings_updated_at ON public.site_settings;
+
 CREATE TRIGGER update_skills_updated_at BEFORE UPDATE ON public.skills FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_experiences_updated_at BEFORE UPDATE ON public.experiences FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_projects_updated_at BEFORE UPDATE ON public.projects FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_certifications_updated_at BEFORE UPDATE ON public.certifications FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_admin_users_updated_at BEFORE UPDATE ON public.admin_users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_site_settings_updated_at BEFORE UPDATE ON public.site_settings FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 
@@ -171,6 +202,8 @@ CREATE TRIGGER update_site_settings_updated_at BEFORE UPDATE ON public.site_sett
 
 -- Skills: Public read, admin write
 ALTER TABLE public.skills ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Skills are viewable by everyone" ON public.skills;
+DROP POLICY IF EXISTS "Skills are editable by admin users" ON public.skills;
 CREATE POLICY "Skills are viewable by everyone" ON public.skills FOR SELECT USING (true);
 CREATE POLICY "Skills are editable by admin users" ON public.skills FOR ALL USING (
     auth.uid() IN (SELECT user_id FROM public.admin_users WHERE is_active = true)
@@ -178,6 +211,8 @@ CREATE POLICY "Skills are editable by admin users" ON public.skills FOR ALL USIN
 
 -- Experiences: Public read, admin write
 ALTER TABLE public.experiences ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Experiences are viewable by everyone" ON public.experiences;
+DROP POLICY IF EXISTS "Experiences are editable by admin users" ON public.experiences;
 CREATE POLICY "Experiences are viewable by everyone" ON public.experiences FOR SELECT USING (true);
 CREATE POLICY "Experiences are editable by admin users" ON public.experiences FOR ALL USING (
     auth.uid() IN (SELECT user_id FROM public.admin_users WHERE is_active = true)
@@ -185,13 +220,26 @@ CREATE POLICY "Experiences are editable by admin users" ON public.experiences FO
 
 -- Projects: Public read, admin write
 ALTER TABLE public.projects ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Projects are viewable by everyone" ON public.projects;
+DROP POLICY IF EXISTS "Projects are editable by admin users" ON public.projects;
 CREATE POLICY "Projects are viewable by everyone" ON public.projects FOR SELECT USING (true);
 CREATE POLICY "Projects are editable by admin users" ON public.projects FOR ALL USING (
     auth.uid() IN (SELECT user_id FROM public.admin_users WHERE is_active = true)
 );
 
+-- Certifications: Public read, admin write
+ALTER TABLE public.certifications ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Certifications are viewable by everyone" ON public.certifications;
+DROP POLICY IF EXISTS "Certifications are editable by admin users" ON public.certifications;
+CREATE POLICY "Certifications are viewable by everyone" ON public.certifications FOR SELECT USING (true);
+CREATE POLICY "Certifications are editable by admin users" ON public.certifications FOR ALL USING (
+    auth.uid() IN (SELECT user_id FROM public.admin_users WHERE is_active = true)
+);
+
 -- Admin users: Special handling to avoid recursion
 ALTER TABLE public.admin_users ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Users can view their own admin record" ON public.admin_users;
+DROP POLICY IF EXISTS "Service role can manage admin users" ON public.admin_users;
 -- Allow authenticated users to read their own admin record
 CREATE POLICY "Users can view their own admin record" ON public.admin_users FOR SELECT USING (
     auth.uid() = user_id
@@ -203,6 +251,8 @@ CREATE POLICY "Service role can manage admin users" ON public.admin_users FOR AL
 
 -- User tracking: Insert only, admin read
 ALTER TABLE public.user_tracking ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "User tracking allows insert for everyone" ON public.user_tracking;
+DROP POLICY IF EXISTS "User tracking is viewable by admin users only" ON public.user_tracking;
 CREATE POLICY "User tracking allows insert for everyone" ON public.user_tracking FOR INSERT WITH CHECK (true);
 CREATE POLICY "User tracking is viewable by admin users only" ON public.user_tracking FOR SELECT USING (
     auth.uid() IN (SELECT user_id FROM public.admin_users WHERE is_active = true)
@@ -210,6 +260,8 @@ CREATE POLICY "User tracking is viewable by admin users only" ON public.user_tra
 
 -- Chatbot conversations: Insert for everyone, admin read
 ALTER TABLE public.chatbot_conversations ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Chatbot conversations allow insert for everyone" ON public.chatbot_conversations;
+DROP POLICY IF EXISTS "Chatbot conversations are viewable by admin users only" ON public.chatbot_conversations;
 CREATE POLICY "Chatbot conversations allow insert for everyone" ON public.chatbot_conversations FOR INSERT WITH CHECK (true);
 CREATE POLICY "Chatbot conversations are viewable by admin users only" ON public.chatbot_conversations FOR SELECT USING (
     auth.uid() IN (SELECT user_id FROM public.admin_users WHERE is_active = true)
@@ -217,6 +269,9 @@ CREATE POLICY "Chatbot conversations are viewable by admin users only" ON public
 
 -- Site settings: Public read for public settings, admin write
 ALTER TABLE public.site_settings ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS "Public site settings are viewable by everyone" ON public.site_settings;
+DROP POLICY IF EXISTS "All site settings are viewable by admin users" ON public.site_settings;
+DROP POLICY IF EXISTS "Site settings are editable by admin users" ON public.site_settings;
 CREATE POLICY "Public site settings are viewable by everyone" ON public.site_settings FOR SELECT USING (is_public = true);
 CREATE POLICY "All site settings are viewable by admin users" ON public.site_settings FOR SELECT USING (
     auth.uid() IN (SELECT user_id FROM public.admin_users WHERE is_active = true)
@@ -256,7 +311,9 @@ BEGIN
         'skills_count', (SELECT COUNT(*) FROM public.skills),
         'experiences_count', (SELECT COUNT(*) FROM public.experiences),
         'projects_count', (SELECT COUNT(*) FROM public.projects),
+        'certifications_count', (SELECT COUNT(*) FROM public.certifications),
         'featured_projects_count', (SELECT COUNT(*) FROM public.projects WHERE is_featured = true),
+        'featured_certifications_count', (SELECT COUNT(*) FROM public.certifications WHERE is_featured = true),
         'total_visitors', (SELECT COUNT(DISTINCT session_id) FROM public.user_tracking),
         'total_page_views', (SELECT COUNT(*) FROM public.user_tracking),
         'chatbot_conversations', (SELECT COUNT(*) FROM public.chatbot_conversations)

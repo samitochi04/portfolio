@@ -8,8 +8,8 @@
   },
   "hero": {
     "title": "Bienvenue dans mon portfolio",
-    "subtitle": "Data Scientist & Développeur Full Stack",
-    "description": "Passionné par l'Intelligence Artificielle, l'analyse de données et le développement web moderne. Je transforme les données en insights et les idées en applications innovantes.",
+    "subtitle": "Data Scientist",
+    "description": "Passionné par l'Intelligence Artificielle, l'analyse de données et l'automatisation. Je transforme les données en insights et les idées en applications innovantes.",
     "playVoice": "Jouer le message de bienvenue",
     "stopVoice": "Arrêter le message",
     "stats": {
@@ -41,18 +41,21 @@
     "title": "Mon Parcours",
     "subtitle": "Expériences professionnelles et formations",
     "current": "Actuel",
+    "noExpiration": "Sans expiration",
     "duration": "Durée",
     "company": "Entreprise",
     "education": "Formation",
     "work": "Expérience",
     "project": "Projet",
-    "certification": "Certification"
+    "certification": "Certification",
+    "viewDetails": "Voir les détails"
   },
   "projects": {
     "title": "Mes Projets",
     "subtitle": "Découvrez mes réalisations récentes",
     "viewLive": "Voir le projet",
     "viewCode": "Voir le code",
+    "viewDetails": "Voir les détails",
     "technologies": "Technologies utilisées",
     "type": {
       "web_app": "Application Web",
@@ -77,11 +80,15 @@
   },
   "chatbot": {
     "title": "Assistant IA",
+    "subtitle": "Posez-moi vos questions sur Samuel",
     "placeholder": "Posez-moi une question...",
     "send": "Envoyer",
     "thinking": "Je réfléchis...",
     "error": "Désolé, une erreur s'est produite",
-    "welcome": "Bonjour ! Je suis l'assistant IA de Samuel. Comment puis-je vous aider ?"
+    "welcome": "Bonjour ! Je suis l'assistant IA de Samuel. Comment puis-je vous aider ?",
+    "suggestions": "Suggestions",
+    "close": "Fermer le chat",
+    "open": "Ouvrir le chat"
   },
   "common": {
     "loading": "Chargement...",

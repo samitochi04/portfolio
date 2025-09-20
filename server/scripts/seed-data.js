@@ -252,8 +252,8 @@ const projects = [
 
 const siteSettings = [
   { key: 'site_title', value: 'Samuel FOTSO - Portfolio', description: 'Titre principal du site', type: 'string', is_public: true },
-  { key: 'site_description', value: 'Data Scientist & Développeur Full Stack', description: 'Description du site', type: 'string', is_public: true },
-  { key: 'contact_email', value: 'samuel.fotso@example.com', description: 'Email de contact principal', type: 'string', is_public: true },
+  { key: 'site_description', value: 'Data Scientist', description: 'Description du site', type: 'string', is_public: true },
+  { key: 'contact_email', value: 'temmodaryl317@gmail.com', description: 'Email de contact principal', type: 'string', is_public: true },
   { key: 'linkedin_url', value: 'https://www.linkedin.com/in/samuel-fotso-6b9879253/', description: 'Profil LinkedIn', type: 'string', is_public: true },
   { key: 'github_url', value: 'https://github.com/samitochi04', description: 'Profil GitHub', type: 'string', is_public: true },
   { key: 'enable_chatbot', value: 'true', description: 'Activer le chatbot', type: 'boolean', is_public: true },
@@ -336,7 +336,7 @@ async function createAdminUser() {
   // Replace with actual user ID from your Supabase Auth
   const adminUser = {
     user_id: '00000000-0000-0000-0000-000000000000', // Replace with actual UUID
-    email: 'samuel.fotso@example.com',
+    email: 'temmodaryl317@gmail.com',
     full_name: 'Samuel FOTSO',
     role: 'super_admin',
     is_active: true

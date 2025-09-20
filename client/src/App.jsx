@@ -10,7 +10,9 @@ import Footer from './components/layout/Footer';
 import Hero from './components/sections/Hero';
 import Skills from './components/sections/Skills';
 import Experience from './components/sections/Experience';
+import ExperienceDetail from './components/sections/ExperienceDetail';
 import Projects from './components/sections/Projects';
+import ProjectDetail from './components/sections/ProjectDetail';
 import Contact from './components/sections/Contact';
 import Chatbot from './components/sections/Chatbot';
 
@@ -76,6 +78,10 @@ function App() {
         <Routes>
           {/* Main Portfolio Route */}
           <Route path="/" element={<Portfolio />} />
+          
+          {/* Detail Pages */}
+          <Route path="/project/:id" element={<ProjectDetail />} />
+          <Route path="/experience/:id" element={<ExperienceDetail />} />
           
           {/* Admin Routes */}
           <Route path="/admin/login" element={<AdminLogin />} />

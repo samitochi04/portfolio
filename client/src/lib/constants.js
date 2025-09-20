@@ -56,7 +56,6 @@ export const SKILLS_CATEGORIES = {
 export const EXPERIENCE_TYPES = {
   WORK: 'work',
   EDUCATION: 'education',
-  PROJECT: 'project',
   CERTIFICATION: 'certification',
 };
 

@@ -26,7 +26,7 @@ const Footer = () => {
     },
     {
       name: 'Email',
-      href: 'mailto:samuel.fotso@example.com',
+      href: 'mailto:temmodaryl317@gmail.com',
       icon: (
         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
@@ -60,7 +60,7 @@ const Footer = () => {
               Samuel FOTSO
             </h3>
             <p className="text-gray-300 leading-relaxed">
-              Data Scientist & Développeur Full Stack passionné par l'IA et l'innovation technologique.
+              Data Scientist passionné par l'IA et l'innovation technologique.
             </p>
             <div className="flex space-x-4">
               {socialLinks.map((link) => (
@@ -103,7 +103,7 @@ const Footer = () => {
                 <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 4.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <span>samuel.fotso@example.com</span>
+                <span>temmodaryl317@gmail.com</span>
               </div>
               <div className="flex items-center space-x-3">
                 <svg className="w-5 h-5 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -129,10 +129,10 @@ const Footer = () => {
               © {currentYear} Samuel FOTSO. Tous droits réservés.
             </div>
             <div className="flex items-center space-x-6 text-sm text-gray-400">
-              <span>Fait avec ❤️ et React + Three.js</span>
+              <span>I love Coding ❤️ </span>
               <div className="flex items-center space-x-2">
                 <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                <span>Site disponible 24/7</span>
+                <span>Activement à la recherche d'une alternance</span>
               </div>
             </div>
           </div>

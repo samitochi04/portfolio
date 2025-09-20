@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router-dom';
 import { Card, Button } from '../ui';
 import { PROJECT_TYPES } from '../../lib/constants';
 import { useSupabaseAdmin } from '../../hooks';
@@ -190,6 +191,18 @@ const Projects = () => {
 
                 {/* Action Buttons */}
                 <div className="flex space-x-3 pt-4">
+                  <Link to={`/project/${project.id}`} className="flex-1">
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      className="w-full"
+                    >
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      {t('projects.viewDetails')}
+                    </Button>
+                  </Link>
                   {project.liveUrl && (
                     <Button
                       variant="accent"

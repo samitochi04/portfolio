@@ -67,10 +67,6 @@ const Hero = () => {
     }
   };
 
-  const changeLanguage = (lng) => {
-    i18n.changeLanguage(lng);
-  };
-
   return (
     <section 
       id="home" 
@@ -85,23 +81,6 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-20 text-center text-white px-4 max-w-4xl mx-auto">
-        {/* Language Selector */}
-        <div className="absolute top-4 right-4 flex space-x-2">
-          {['fr', 'en', 'de'].map((lang) => (
-            <button
-              key={lang}
-              onClick={() => changeLanguage(lang)}
-              className={`px-3 py-1 rounded-md text-sm font-medium transition-all duration-300 ${
-                i18n.language === lang
-                  ? 'bg-blue-600 text-white'
-                  : 'bg-white/20 text-white hover:bg-white/30'
-              }`}
-            >
-              {lang.toUpperCase()}
-            </button>
-          ))}
-        </div>
-
         {/* Voice Control */}
         {audioAvailable && (
           <div className="absolute top-4 left-4">
@@ -157,7 +136,7 @@ const Hero = () => {
               <div className="text-sm text-gray-400">{t('hero.stats.skills')}</div>
             </div>
             <div className="text-center">
-              <div className="text-3xl font-bold text-yellow-400">24/7</div>
+              <div className="text-3xl font-bold text-yellow-400">5/7</div>
               <div className="text-sm text-gray-400">{t('hero.stats.availability')}</div>
             </div>
           </div>
@@ -183,20 +162,6 @@ const Hero = () => {
           </div>
         </div>
 
-        {/* Scroll Indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
-          <svg 
-            className="w-6 h-6 text-white/60" 
-            fill="none" 
-            strokeLinecap="round" 
-            strokeLinejoin="round" 
-            strokeWidth="2" 
-            viewBox="0 0 24 24" 
-            stroke="currentColor"
-          >
-            <path d="M19 14l-7 7m0 0l-7-7m7 7V3" />
-          </svg>
-        </div>
       </div>
 
       {/* Background Elements */}
