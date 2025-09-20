@@ -28,6 +28,7 @@ app.use(cors({
       'http://localhost:5173',
       'http://localhost:4173',
       'http://127.0.0.1:5173',
+      'http://cck88ccwg00k8c8ccwswgkss.168.231.82.151.sslip.io', // Production frontend
       process.env.CLIENT_URL
     ];
     
@@ -43,11 +44,15 @@ app.use(cors({
     // Allow Netlify domains
     const netlifyRegex = /^https:\/\/.*\.netlify\.app$/;
     
+    // Allow sslip.io domains for deployment
+    const sslipRegex = /^https?:\/\/[a-z0-9]+\.[\d.]+\.sslip\.io$/;
+    
     if (allowedOrigins.includes(origin) || 
         localNetworkRegex.test(origin) || 
         cloudflareRegex.test(origin) ||
         vercelRegex.test(origin) ||
-        netlifyRegex.test(origin)) {
+        netlifyRegex.test(origin) ||
+        sslipRegex.test(origin)) {
       callback(null, true);
     } else {
       console.log('CORS blocked origin:', origin);

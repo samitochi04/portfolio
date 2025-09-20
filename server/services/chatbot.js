@@ -1,5 +1,6 @@
 import OpenAI from 'openai';
 import dotenv from 'dotenv';
+import { createClient } from '@supabase/supabase-js';
 
 dotenv.config();
 
@@ -8,127 +9,138 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
-// Knowledge base about Samuel FOTSO
-const KNOWLEDGE_BASE = {
-  personalInfo: {
-    name: "Samuel FOTSO",
-    title: "Data Scientist",
-    email: "temmodaryl317@gmail.com",
-    location: "France",
-    languages: ["Français", "Anglais", "Allemand"],
-    phone: "+33 X XX XX XX XX",
-    linkedin: "https://www.linkedin.com/in/samuel-fotso-6b9879253/",
-    github: "https://github.com/samitochi04"
-  },
-  
-  skills: {
-    programming: [
-      { name: "Python", level: 95, experience: "4 ans", description: "Expert en développement Python pour data science et web" },
-      { name: "JavaScript", level: 90, experience: "3 ans", description: "Développement frontend et backend moderne" },
-      { name: "TypeScript", level: 85, experience: "2 ans", description: "JavaScript typé pour des applications robustes" },
-      { name: "SQL", level: 88, experience: "3 ans", description: "Requêtes complexes et optimisation de bases de données" },
-      { name: "R", level: 75, experience: "2 ans", description: "Analyse statistique et visualisation de données" }
-    ],
-    frameworks: [
-      { name: "React", level: 92, experience: "3 ans", description: "Développement d'interfaces utilisateur modernes" },
-      { name: "Node.js", level: 85, experience: "2 ans", description: "Développement backend JavaScript" },
-      { name: "FastAPI", level: 88, experience: "2 ans", description: "APIs Python rapides et modernes" },
-      { name: "TensorFlow", level: 82, experience: "2 ans", description: "Machine Learning et Deep Learning" },
-      { name: "Scikit-learn", level: 90, experience: "3 ans", description: "Machine Learning traditionnel" }
-    ],
-    databases: [
-      { name: "PostgreSQL", level: 85, experience: "3 ans", description: "Base de données relationnelle avancée" },
-      { name: "MongoDB", level: 78, experience: "2 ans", description: "Base de données NoSQL" },
-      { name: "Supabase", level: 80, experience: "1 an", description: "Backend-as-a-Service moderne" }
-    ],
-    tools: [
-      { name: "Docker", level: 85, experience: "2 ans" },
-      { name: "Git", level: 90, experience: "4 ans" },
-      { name: "AWS", level: 75, experience: "2 ans" },
-      { name: "VS Code", level: 95, experience: "4 ans" }
-    ]
-  },
-  
-  experiences: [
-    {
-      title: "Data Scientist Senior",
-      company: "TechCorp Solutions",
-      type: "work",
-      period: "2023 - Présent",
-      description: "Développement de modèles de machine learning pour l'analyse prédictive et l'optimisation des processus métier.",
-      achievements: [
-        "Amélioration de 35% de la précision des modèles de prédiction de ventes",
-        "Mise en place d'un pipeline de données automatisé traitant 1M+ d'enregistrements/jour",
-        "Formation de 15+ collaborateurs aux outils de data science"
-      ]
-    },
-    {
-      title: "Développeur Full Stack",
-      company: "InnoWeb Agency",
-      type: "work",
-      period: "2021-2022",
-      description: "Développement d'applications web complètes utilisant React, Node.js et PostgreSQL.",
-      achievements: [
-        "Développement de 8 applications web pour divers clients",
-        "Implémentation d'un système de recommandation IA augmentant l'engagement de 45%"
-      ]
-    },
-    {
-      title: "Master en Data Science et IA",
-      company: "Université Paris-Saclay",
-      type: "education",
-      period: "2019-2021",
-      description: "Formation approfondie en science des données, intelligence artificielle, et machine learning."
-    }
-  ],
-  
-  certifications: [
-    {
-      name: "AWS Certified Solutions Architect - Professional",
-      organization: "Amazon Web Services",
-      year: "2023",
-      skills: ["AWS", "Cloud Architecture", "Scalability", "Security"]
-    },
-    {
-      name: "Google Professional Data Engineer",
-      organization: "Google Cloud",
-      year: "2023",
-      skills: ["Google Cloud", "BigQuery", "Dataflow", "Data Pipeline"]
-    },
-    {
-      name: "TensorFlow Developer Certificate",
-      organization: "TensorFlow Certificate Program",
-      year: "2022",
-      skills: ["TensorFlow", "Deep Learning", "Neural Networks"]
-    }
-  ],
-  
-  projects: [
-    {
-      title: "Système de Recommandation E-commerce",
-      type: "AI/ML",
-      description: "Développement d'un système de recommandation basé sur l'IA pour une plateforme e-commerce",
-      technologies: ["Python", "TensorFlow", "PostgreSQL", "React"],
-      impact: "Augmentation de 45% du taux de conversion"
-    },
-    {
-      title: "Plateforme d'Analyse de Données",
-      type: "Web App",
-      description: "Application web pour l'analyse et la visualisation de données en temps réel",
-      technologies: ["React", "Node.js", "D3.js", "MongoDB"],
-      impact: "Utilisée par plus de 500 analystes"
-    }
-  ],
-  
-  interests: [
-    "Intelligence Artificielle",
-    "Data Science",
-    "Développement Web",
-    "Cloud Computing",
-    "Automatisation",
-    "Veille technologique"
-  ]
+// Initialize Supabase client
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_SERVICE_ROLE_KEY
+);
+
+// Static personal info (update as needed)
+const STATIC_PERSONAL_INFO = {
+  name: "Samuel FOTSO",
+  title: "Data Scientist, à la recherche d'une alternance",
+  email: "temmodaryl317@gmail.com",
+  location: "France",
+  languages: ["Français", "Anglais", "Allemand"],
+  phone: "+33 X XX XX XX XX",
+  linkedin: "https://www.linkedin.com/in/samuel-fotso-6b9879253/",
+  github: "https://github.com/samitochi04"
 };
+
+// Function to fetch real-time data from database
+async function fetchKnowledgeBase() {
+  try {
+    // Fetch all data in parallel
+    const [skillsResult, experiencesResult, projectsResult, certificationsResult] = await Promise.all([
+      supabase
+        .from('skills')
+        .select('*')
+        .order('display_order', { ascending: true }),
+      supabase
+        .from('experiences')
+        .select('*')
+        .order('start_date', { ascending: false }),
+      supabase
+        .from('projects')
+        .select('*')
+        .order('display_order', { ascending: true }),
+      supabase
+        .from('certifications')
+        .select('*')
+        .order('issue_date', { ascending: false })
+    ]);
+
+    // Process skills by category
+    const skills = {};
+    if (skillsResult.data) {
+      skillsResult.data.forEach(skill => {
+        if (!skills[skill.category]) {
+          skills[skill.category] = [];
+        }
+        skills[skill.category].push({
+          name: skill.name,
+          level: skill.level,
+          experience: `${skill.years_experience} an${skill.years_experience > 1 ? 's' : ''}`,
+          description: skill.description || `Expertise en ${skill.name}`
+        });
+      });
+    }
+
+    // Process experiences
+    const experiences = experiencesResult.data?.map(exp => ({
+      title: exp.title,
+      company: exp.company,
+      type: exp.type,
+      period: formatDatePeriod(exp.start_date, exp.end_date, exp.is_current),
+      description: exp.description,
+      achievements: exp.achievements || [],
+      technologies: exp.technologies || [],
+      location: exp.location
+    })) || [];
+
+    // Process projects
+    const projects = projectsResult.data?.map(project => ({
+      title: project.title,
+      type: project.type,
+      description: project.description,
+      technologies: project.technologies || [],
+      status: project.status,
+      live_url: project.live_url,
+      github_url: project.github_url,
+      features: project.features || []
+    })) || [];
+
+    // Process certifications
+    const certifications = certificationsResult.data?.map(cert => ({
+      name: cert.name,
+      organization: cert.issuing_organization,
+      year: cert.issue_date ? new Date(cert.issue_date).getFullYear().toString() : 'N/A',
+      skills: cert.skills || [],
+      credential_url: cert.credential_url,
+      description: cert.description
+    })) || [];
+
+    return {
+      personalInfo: STATIC_PERSONAL_INFO,
+      skills,
+      experiences,
+      projects,
+      certifications,
+      interests: [
+        "Intelligence Artificielle",
+        "Data Science", 
+        "Développement Web",
+        "Cloud Computing",
+        "Automatisation",
+        "Veille technologique"
+      ]
+    };
+
+  } catch (error) {
+    console.error('Error fetching knowledge base:', error);
+    // Return fallback static data if database fetch fails
+    return {
+      personalInfo: STATIC_PERSONAL_INFO,
+      skills: { error: "Impossible de récupérer les compétences" },
+      experiences: [],
+      projects: [],
+      certifications: [],
+      interests: ["Intelligence Artificielle", "Data Science", "Développement Web"]
+    };
+  }
+}
+
+// Helper function to format date periods
+function formatDatePeriod(startDate, endDate, isCurrent) {
+  const start = new Date(startDate).getFullYear();
+  if (isCurrent) {
+    return `${start} - Présent`;
+  } else if (endDate) {
+    const end = new Date(endDate).getFullYear();
+    return start === end ? start.toString() : `${start}-${end}`;
+  }
+  return start.toString();
+}
 
 // System prompt for the chatbot
 const SYSTEM_PROMPT = `
@@ -160,10 +172,12 @@ RÈGLES IMPORTANTES:
 - Réponds dans la langue de la question posée
 `;
 
-// Function to create a conversation context
-export function createConversationContext(userMessage, conversationHistory = []) {
+// Function to create a conversation context with dynamic data
+export async function createConversationContext(userMessage, conversationHistory = []) {
+  const knowledgeBase = await fetchKnowledgeBase();
+  
   const context = {
-    knowledge: KNOWLEDGE_BASE,
+    knowledge: knowledgeBase,
     conversation: conversationHistory,
     currentMessage: userMessage,
     timestamp: new Date().toISOString()
@@ -172,16 +186,16 @@ export function createConversationContext(userMessage, conversationHistory = [])
   return context;
 }
 
-// Function to generate chatbot response
+// Function to generate chatbot response with dynamic data
 export async function generateChatbotResponse(userMessage, conversationHistory = []) {
   try {
-    // Create conversation context
-    const context = createConversationContext(userMessage, conversationHistory);
+    // Fetch fresh data from database
+    const knowledgeBase = await fetchKnowledgeBase();
     
     // Prepare messages for OpenAI
     const messages = [
       { role: "system", content: SYSTEM_PROMPT },
-      { role: "system", content: `Base de connaissances: ${JSON.stringify(KNOWLEDGE_BASE, null, 2)}` }
+      { role: "system", content: `Base de connaissances (données en temps réel): ${JSON.stringify(knowledgeBase, null, 2)}` }
     ];
     
     // Add conversation history
@@ -211,7 +225,12 @@ export async function generateChatbotResponse(userMessage, conversationHistory =
       success: true,
       response: response,
       responseTime: responseTime,
-      context: context,
+      context: {
+        knowledge: knowledgeBase,
+        conversation: conversationHistory,
+        currentMessage: userMessage,
+        timestamp: new Date().toISOString()
+      },
       usage: completion.usage
     };
     
@@ -264,5 +283,5 @@ export default {
   generateChatbotResponse,
   createConversationContext,
   getConversationSuggestions,
-  KNOWLEDGE_BASE
+  fetchKnowledgeBase
 };

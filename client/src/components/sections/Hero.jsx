@@ -18,6 +18,9 @@ const Hero = () => {
       setVoicePlayed(true);
     }
 
+    // TODO: Add voice greeting file to public folder
+    // For now, disable voice greeting to prevent 404 errors
+    /*
     // Check if audio file is available
     const audio = new Audio('/voice-greeting.mp3');
     audio.addEventListener('canplaythrough', () => {
@@ -25,6 +28,7 @@ const Hero = () => {
     });
     
     audioRef.current = audio;
+    */
 
     return () => {
       if (audioRef.current) {

@@ -37,7 +37,8 @@ const Chatbot = () => {
 
   const loadSuggestions = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/chatbot/suggestions?lang=${i18n.language}`);
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/chatbot/suggestions?lang=${i18n.language}`);
       if (response.ok) {
         const data = await response.json();
         if (data.success) {
@@ -72,7 +73,8 @@ const Chatbot = () => {
           content: msg.text
         }));
 
-      const response = await fetch(`${import.meta.env.VITE_API_URL || 'http://localhost:3001'}/api/chatbot/chat`, {
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+      const response = await fetch(`${apiUrl}/api/chatbot/chat`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
