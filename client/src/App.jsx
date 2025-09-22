@@ -35,7 +35,7 @@ import { useVisitorTracking } from './hooks/useVisitorTracking';
 // Main Portfolio Component
 const Portfolio = () => {
   // Track visitor on portfolio load (temporarily disabled to fix admin login)
-  // useVisitorTracking();
+  useVisitorTracking();
 
   return (
     <div className="bg-black min-h-screen w-full text-white relative">
